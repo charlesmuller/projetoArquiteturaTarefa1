@@ -6,6 +6,7 @@ Este projeto integra a API do Pipedrive para gerenciar contatos e negócios no s
 ## Tecnologias Utilizadas
 - PHP
 - MySQL
+- Laravel
 
 ## Instalação
 1. Clone o repositório:
