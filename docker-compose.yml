@@ -21,12 +21,11 @@ services:
         hostname: api.projetoarquiteturatarefa1.local
         depends_on:
             - projetoarquiteturatarefa1-db
-        command: bash -c 'chmod +x /root/scripts/start.sh; /root/scripts/start.sh'
         restart: always
         volumes:
             - ./:/app
             - ./storage/logs:/var/log/export
-            - ./docker/scripts/start.sh:/root/scripts/start.sh
+            - .docker/scripts/start.sh:/root/scripts/start.sh
         env_file:
             - ./.env
 
