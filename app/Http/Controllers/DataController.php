@@ -6,12 +6,16 @@ use Http;
 
 class DataController extends Controller
 {
-    public function addProduct()
+    public function addProduct(Request $request)
     {
+        $name = $request->input("name");
+        $code = $request->input("code");
+        $unit = $request->input("unit");
+
         $productData = [
-            'name' => 'Unicorn tear', // Nome do produto
-            'code' => '123',
-            'unit' => '10.50'
+            'name' => $name, // Nome do produto
+            'code' => $code,
+            'unit' => $unit
         ];
 
         $company_domain = 'seu_domain_aqui'; // Substitua pelo domínio da sua empresa no Pipedrive
