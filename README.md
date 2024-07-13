@@ -16,5 +16,8 @@
 ## Mapear o hosts
  127.0.0.1 api.projetoarquiteturatarefa1.local mysql.projetoarquiteturatarefa1.local
 
+## Iniciando a aplicação
+docker-compose up -d
+
 ## .env
  Versionado dado que este projeto é destinado a estudos
