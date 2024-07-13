@@ -6,11 +6,11 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - .:/var/www/html
+      - .:/app
       - ./docker/scripts/start.sh:/root/scripts/start.sh
     environment:
       SERVICE_NAME: app
-    command: bash -c 'chmod +x /root/scripts/start.sh; /root/scripts/start.sh'
+    command: bash -c 'chmod +x /root/scripts/start.sh; /root/scripts/start.sh; php artisan migrate' 
     ports:
       - "8000:80"
     restart: always
