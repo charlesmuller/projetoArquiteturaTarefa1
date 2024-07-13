@@ -1,77 +1,43 @@
-version: '2.4'
-
+version: '3'
 services:
-    projetoarquiteturatarefa1:
-        container_name: api-projetoarquiteturatarefa1
-        environment:
-            - VIRTUAL_HOST=api.projetoarquiteturatarefa1.local
-            - PHP_VERSION_SHORT=8.2
-            - PHPINI_OPEN_BASEDIR=/app
-            - PHPFPM_LOG_LEVEL=debug
-            - VIRTUAL_PORT=80
-            - ALLOW_URL_FOPEN=On
-            - LOG_FILE=api.log
-            - PUBLIC_ROOT=public
-            - NGINX_POLICY=Content-Security-Policy-Report-Only
-            - NGINX_POLICY_VALUE=default-src self;
-            - STATIC_URL=/static
-            - STATIC_PATH=/app/static
-        image: ghcr.io/parisprobr/server-tools:php-8.2
-        hostname: api.projetoarquiteturatarefa1.local
-        depends_on:
-            - projetoarquiteturatarefa1-db
-        restart: always
-        volumes:
-            - ./:/app
-            - ./storage/logs:/var/log/export
-            - .docker/scripts/start.sh:/root/scripts/start.sh
-        env_file:
-            - ./.env
+  # Laravel
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:80"
 
-    composer-projetoarquiteturatarefa1:
-        image: composer:2.5
-        network_mode: host
-        container_name: composer-projetoarquiteturatarefa1
-        user: "${UID}:${UID}"
-        command: composer install
-        volumes:
-            - ./:/app
-            - ${HOME}:${HOME}
-            - /etc/passwd:/etc/passwd:ro
-            - /etc/group:/etc/group:ro
+  # Nginx
+  webserver:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - .:/var/www/html
+    depends_on:
+      - app
 
-    projetoarquiteturatarefa1-db:
-        container_name: projetoarquiteturatarefa1-db
-        environment:
-            MYSQL_ROOT_PASSWORD: kK123KFTah78dAiv
-            MYSQL_DATABASE: projetoarquiteturatarefa1
-            MYSQL_USER: projetoarquiteturatarefa1
-            MYSQL_PASSWORD: kK123KFTah78dAiv
-        image: mysql:5.7
-        volumes:
-            - ./database/mysql:/var/lib/mysql
-        env_file:
-            - ./.env
+  # Banco de Dados MySQL
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: root
 
-    phpmyadmin-projetoarquiteturatarefa1:
-        image: phpmyadmin/phpmyadmin
-        container_name: phpmyadmin-projetoarquiteturatarefa1
-        restart: on-failure
-        links:
-            - projetoarquiteturatarefa1-db
-        environment:
-            PMA_HOSTS: projetoarquiteturatarefa1-db
-            VIRTUAL_HOST: mysql.projetoarquiteturatarefa1.local
-        depends_on:
-            - projetoarquiteturatarefa1-db
-
-    nginx:
-        image: nginx:alpine
-        container_name: nginx-projetoarquiteturatarefa1
-        ports:
-            - "80:80"
-        volumes:
-            - ./:/app
-            - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-        depends_on:
-            - projetoarquiteturatarefa1-db
+  # PHPMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
