@@ -10,11 +10,7 @@
 
 ## Instalação
 1. Clone o repositório:
-   ```sh
    git clone git@github.com:charlesmuller/projetoArquiteturaTarefa1.git
-
-## Mapear o hosts
- 127.0.0.1 api.projetoarquiteturatarefa1.local mysql.projetoarquiteturatarefa1.local
 
 ## Iniciando a aplicação
 docker-compose up -d
